@@ -4,6 +4,7 @@ import * as bootstrap from "bootstrap";
 import "./assets/style.css";
 import ProductModal from "./components/ProductModal";
 import Pagination from "./components/Pagination";
+import Login from "./views/Login";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -24,21 +25,13 @@ const INITIAL_TEMPLATE_DATA = {
 
 function App() {
   // 狀態保持不變
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+
   const [isAuth, setIsAuth] = useState(false);
   const [products, setProducts] = useState([]);
   const [templateProduct, setTemplateProduct] = useState(INITIAL_TEMPLATE_DATA);
   const [modalType, setModalType] = useState("");
   const [pagination, setPagination] = useState({});
   const productModalInstance = useRef(null);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleModalInputChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -84,18 +77,24 @@ function App() {
     }
   };
 
-  // 登入
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const uploadImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
     try {
-      const res = await axios.post(`${API_BASE}/admin/signin`, formData);
-      const { token, expired } = res.data;
-      document.cookie = `hexToken=${token}; expires=${new Date(expired).toUTCString()}; path=/;`;
-      axios.defaults.headers.common.Authorization = token;
-      setIsAuth(true);
-      getProducts();
+      const formData = new FormData();
+      formData.append("file-to-upload", file);
+      const res = await axios.post(
+        `${API_BASE}/api/${API_PATH}/admin/upload`,
+        formData,
+      );
+      setTemplateProduct((prev) => ({
+        ...prev,
+        imageUrl: res.data.imageUrl,
+      }));
     } catch (error) {
-      alert(error.response?.data?.message || "登入失敗");
+      alert(error.response?.data?.message || "圖片上傳失敗");
     }
   };
 
@@ -172,36 +171,7 @@ function App() {
   return (
     <>
       {!isAuth ? (
-        <div className="container login">
-          <h1>請先登入</h1>
-          <form className="form-floating" onSubmit={onSubmit}>
-            <div className="form-floating mb-3">
-              <input
-                type="email"
-                className="form-control"
-                name="username"
-                placeholder="name@example.com"
-                value={formData.username}
-                onChange={handleInputChange}
-                required
-              />
-              <label>Email</label>
-            </div>
-            <div className="form-floating">
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-              <label>Password</label>
-            </div>
-            <button className="btn btn-primary mt-3 w-100">登入</button>
-          </form>
-        </div>
+        <Login getProducts={getProducts} setIsAuth={setIsAuth} />
       ) : (
         <div className="container">
           <h2>產品列表</h2>
@@ -265,6 +235,7 @@ function App() {
         handleRemoveImage={handleRemoveImage}
         closeModal={closeModal}
         handleConfirm={handleConfirm}
+        uploadImage={uploadImage}
       />
     </>
   );

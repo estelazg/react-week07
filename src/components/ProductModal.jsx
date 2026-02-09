@@ -6,7 +6,8 @@ function ProductModal({
   handleAddImage,
   handleRemoveImage,
   closeModal,
-  handleConfirm, // 確保這裡正確接收
+  handleConfirm,
+  uploadImage,
 }) {
   return (
     // 使用 ID 替代 Ref
@@ -41,6 +42,22 @@ function ProductModal({
                 {/* 圖片區塊 */}
                 <div className="col-md-4">
                   <div className="mb-3">
+                    <div className="mb-3">
+                      <label
+                        htmlFor="fileUpload"
+                        className="form-label"
+                        accept=".jpg,.jpeg,.png"
+                      >
+                        上傳圖片
+                      </label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        name="fileUpload"
+                        id="fileUpload"
+                        onChange={(e) => uploadImage(e)}
+                      />
+                    </div>
                     <label className="form-label">主圖網址</label>
                     <input
                       type="text"
