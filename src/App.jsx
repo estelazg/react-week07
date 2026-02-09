@@ -24,8 +24,6 @@ const INITIAL_TEMPLATE_DATA = {
 };
 
 function App() {
-  // 狀態保持不變
-
   const [isAuth, setIsAuth] = useState(false);
   const [products, setProducts] = useState([]);
   const [templateProduct, setTemplateProduct] = useState(INITIAL_TEMPLATE_DATA);
@@ -98,7 +96,6 @@ function App() {
     }
   };
 
-  // 初始化 Modal (改用 ID 抓取，不使用 Ref)
   useEffect(() => {
     const modalElement = document.getElementById("productModal");
     if (modalElement) {

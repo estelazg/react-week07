@@ -10,7 +10,6 @@ function ProductModal({
   uploadImage,
 }) {
   return (
-    // 使用 ID 替代 Ref
     <div className="modal fade" id="productModal" tabIndex="-1">
       <div className="modal-dialog modal-xl">
         <div className="modal-content border-0">
