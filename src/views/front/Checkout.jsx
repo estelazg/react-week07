@@ -12,11 +12,11 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 function Checkout() {
   const [products, setProducts] = useState([]);
   const [cartData, setCartData] = useState({});
-  const [tempProduct, setTempProduct] = useState({}); // 存放 Modal 顯示的單一產品
+  const [tempProduct, setTempProduct] = useState({}); 
   const [loadingCartID, setLoadingCartID] = useState(null);
   const [loadingProductID, setLoadingProductID] = useState(null);
 
-  // 修正：統一使用 productModalRef
+ 
   const productModalRef = useRef(null);
 
   const {
@@ -52,7 +52,7 @@ function Checkout() {
     getProducts();
     getCart();
 
-    // 初始化 Bootstrap Modal
+
     productModalRef.current = new bootstrap.Modal("#productModal", {
       keyboard: false,
     });

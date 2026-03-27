@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
@@ -9,6 +10,8 @@ function Login({ getProducts, setIsAuth }) {
   //   username: "",
   //   password: "",
   // });
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -25,6 +28,24 @@ function Login({ getProducts, setIsAuth }) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  // const onSubmit = async (formData) => {
+  //   try {
+  //     const res = await axios.post(`${API_BASE}/admin/signin`, formData);
+
+  //     console.log("API回傳：", res.data); // 👈 加在這裡
+
+  //     const { token, expired } = res.data;
+
+  //     document.cookie = `hexToken=${token}; expires=${new Date(expired).toUTCString()}; path=/;`;
+  //     axios.defaults.headers.common.Authorization = token;
+
+  //     console.log("登入成功");
+
+  //     navigate("/admin/product");
+  //   } catch (error) {
+  //     alert(error.response?.data?.message || "登入失敗");
+  //   }
+  // };
   const onSubmit = async (formData) => {
     // e.preventDefault();
     try {
@@ -32,8 +53,7 @@ function Login({ getProducts, setIsAuth }) {
       const { token, expired } = res.data;
       document.cookie = `hexToken=${token}; expires=${new Date(expired).toUTCString()}; path=/;`;
       axios.defaults.headers.common.Authorization = token;
-      // setIsAuth(true);
-      // getProducts();
+      navigate("/admin/product");
     } catch (error) {
       alert(error.response?.data?.message || "登入失敗");
     }
